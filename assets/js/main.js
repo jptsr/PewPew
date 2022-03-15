@@ -1,122 +1,104 @@
-const main = document.getElementsByTagName('main')[0];
 const canvas = document.getElementsByTagName('canvas')[0];
 const ctx = canvas.getContext('2d');
-
-const btn_start = document.getElementsByTagName('button')[0];
-
-const cannon = new Image();
-cannon.src = '../image/canon.png';
-
-// console.log(btn_start);
-// console.log(main);
-// console.log(canvas);
+const p = document.getElementsByTagName('p')[0];
 
 
-// CANVAS
+let xc = 200, yc = 400, xb = xc - 2.5, yb = yc - 50, xt = 100, yt = 50;
+let counter = 0;
 
-let drawIntro = () => {
-    ctx.fillStyle = "1b1b1b";
 
+canvas.width = 400;
+canvas.height = 400;
+p.textContent = `You hit ${counter} / 10 target(s)`;
+
+
+let drawCannon = (x, y) => {
     ctx.beginPath();
-    ctx.arc(200, 200, 130, 0, 2 * Math.PI);
+    ctx.arc(x, y, 20, 0, 2 * Math.PI);      // xpos, ypos
+    ctx.fill();
+};
+
+
+let drawBullet = (x, y) => {
+    ctx.beginPath();
+    ctx.rect(x, y, 5, 15);     // xpos - 2.5, ypos, with, height
     ctx.stroke();
 };
 
-// drawIntro();
+
+let drawTarget = (x, y) => {
+    ctx.beginPath();
+    ctx.moveTo(x, y);    // x, y
+    ctx.lineTo(x - 10, y - 25);     // x - 10, y -25
+    ctx.lineTo(x + 10, y - 25);    // x + 10, y - 25
+    ctx.lineTo(x, y);    // x, y
+    ctx.fill();
+};
 
 
-// CLEAR CANVAS
-let clearCanvas = () => {ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)};
+let randomTarget = () => {
+    xt = Math.floor(Math.random() * 401);
+    yt = Math.floor(Math.random() * 51);
+
+    drawTarget(xt, yt);
+}
 
 
-// DRAW THE GAME
-// let init = () => {
-    
-//     window.requestAnimationFrame(game);
-// }
+let displayTarget = () => {
+    randomTarget();
+};
 
 
 let game = () => {
-    console.log('game function is ok');
-    ctx.drawImage(cannon,0,0,210,260);
-}
+    ctx.fillStyle = "black";
 
-game();
+    // cannon
+    drawCannon(xc, yc);
+
+    // bullet
+    yb -= 3;
+    drawBullet(xb, yb);
+
+    if(yb < -18){
+        ctx.clearRect(0, -50, 400, 50);
+        yb = yc - 50
+        xb = xc - 2.5;
+        drawBullet(xb, yb);
+    }
+
+    // target
+    drawTarget(xt, yt);
+};
 
 
-btn_start.addEventListener('click', () => {
-    console.log('listener is listening');
-    // clearCanvas();
-    // draw();
+let update = () => {
+    ctx.clearRect(0, 0, 400, 400);
+    game();
+    window.requestAnimationFrame(update);
+};
+
+update();
+
+
+document.addEventListener('keydown', (e) => {
+    let key = e.key;
+
+    if(key == 'ArrowRight'){
+        if(xc >= 380){
+            xc = 380;
+        }
+
+        xc += 1.5;
+        drawCannon(xc, yc);
+    }
+
+    if(key == 'ArrowLeft'){
+
+        if(xc <= 20){
+            xc = 20;
+        }
+
+        xc -= 1.5;
+        drawCannon(xc, yc);
+    }
 });
-
-
-// let draw = () => {
-//     ctx.fillStyle = "#000000";
-
-//     // Bas du canon p1
-//     ctx.beginPath();
-//     ctx.moveTo(198, 400);
-//     ctx.lineTo(202, 400);
-//     ctx.lineTo(202, 395);
-//     ctx.lineTo(208, 395);
-//     ctx.lineTo(208, 390);
-//     ctx.lineTo(192, 390);
-//     ctx.lineTo(192, 395);
-//     ctx.lineTo(198, 395);
-//     ctx.lineTo(198, 400);
-//     ctx.stroke();
-
-//     // Bas du canon p2
-//     ctx.beginPath();
-//     ctx.moveTo(208, 390);
-//     ctx.lineTo(214,390);
-//     ctx.lineTo(214, 385);
-//     ctx.lineTo(218, 385);
-//     ctx.lineTo(218, 370);
-//     ctx.lineTo(182, 370);
-//     ctx.lineTo(182, 385);
-//     ctx.lineTo(186, 385);
-//     ctx.lineTo(186, 390);
-//     ctx.lineTo(192, 390);
-//     ctx.stroke();
-
-//     // allonge du canon
-//     ctx.beginPath();
-//     ctx.moveTo(216, 370);
-//     ctx.lineTo(216, 355);
-//     ctx.lineTo(212, 355);
-//     ctx.lineTo(212, 320);
-//     ctx.lineTo(214, 320);
-//     ctx.lineTo(214, 318);
-//     ctx.lineTo(186, 318);
-//     ctx.lineTo(186, 320);
-//     ctx.lineTo(188, 320);
-//     ctx.lineTo(188, 355);
-//     ctx.lineTo(184, 355);
-//     ctx.lineTo(184, 370);
-//     ctx.stroke();
-
-//     // côté gauche
-//     ctx.beginPath();
-//     ctx.moveTo(182, 390);
-//     ctx.lineTo(182, 365);
-//     ctx.lineTo(172, 365);
-//     ctx.lineTo(172, 390);
-//     ctx.lineTo(182, 390);
-//     ctx.stroke();
-
-
-//     // côté droit
-//     ctx.beginPath();
-//     ctx.moveTo(218, 390);
-//     ctx.lineTo(218, 365);
-//     ctx.lineTo(228, 365);
-//     ctx.lineTo(228, 390);
-//     ctx.lineTo(218, 390);
-//     ctx.stroke();
-
-
-//     ctx.lineJoin = "round";
-//     ctx.lineCap = "round";
-// };
