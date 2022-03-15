@@ -1,7 +1,29 @@
 @import url(./font.scss);
 
 body{
-    margin: 0 auto;
+    margin: auto;
     font-family: "bahnschrift";
     font-size: 15px;
+}
+
+// .hide{
+//     display: none;
+// }
+
+.flexColumn{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ------------------------------------------------------------------------------------------------------------------------------ */
+
+main{
+    @extend .flexColumn;
+    gap: 25px 0;
+
+    h1{
+        font-size: 2.7em;
+    }
 }
