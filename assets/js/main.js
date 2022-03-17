@@ -14,7 +14,7 @@ let keyCondition = false;
 
 canvas.width = 400;
 canvas.height = 400;
-p.textContent = `You hit ${counter} / 10 target(s)`;
+p.textContent = `You hit ${counter} / 10 targets`;
 
 
 let drawCannon = (x, y) => {
@@ -65,11 +65,12 @@ let game = () => {
     if((xt -15 <= xb) && (xb <= xt + 10)){
         if(yb < yt){
             counter++;
-            p.textContent = `You hit ${counter} / 10 target(s)`;
+            p.textContent = `You hit ${counter} / 10 targets`;
 
-            if(counter >= 10){
+            if(counter >= 2){
                 console.log('you win');
                 p.textContent = `You win`;
+                document.removeEventListener('keydown', onKeyDown, true);
             }
 
             ctx.clearRect(0, 0, 400, 50);
