@@ -5,6 +5,7 @@ const p = document.getElementsByTagName('p')[0];
 
 let xc = 200, yc = 400, xb = xc - 2.5, yb = yc - 50, xt = 100, yt = 50;
 let counter = 0;
+let condition = false;
 
 
 canvas.width = 400;
@@ -36,14 +37,6 @@ let drawTarget = (x, y) => {
 };
 
 
-let randomTarget = () => {
-    xt = Math.floor(Math.random() * 401);
-    yt = Math.floor(Math.random() * 51);
-
-    drawTarget(xt, yt);
-}
-
-
 let displayTarget = () => {
     randomTarget();
 };
@@ -56,10 +49,13 @@ let game = () => {
     drawCannon(xc, yc);
 
     // bullet
-    yb -= 3;
-    drawBullet(xb, yb);
+    if(condition){
+        yb -= 4;
+        drawBullet(xb, yb);
+    }    
 
     if(yb < -18){
+        condition = false;
         ctx.clearRect(0, -50, 400, 50);
         yb = yc - 50
         xb = xc - 2.5;
@@ -67,6 +63,26 @@ let game = () => {
     }
 
     // target
+    if((xt -15 <= xb) && (xb <= xt + 10)){
+        if(yb < yt){
+            counter++;
+            p.textContent = `You hit ${counter} / 10 target(s)`;
+
+            if(counter >= 10){
+                console.log('you win');
+                p.textContent = `You win`;
+                // window.cancelAnimationFrame(update);
+                // window.cancelAnimationFrame(game);
+                // ctx.clearRect(0, 0, 400, 400);
+            }
+
+            ctx.clearRect(0, 0, 400, 50);
+         
+            xt = Math.floor((Math.random() * 370) + 20);  
+            yt = Math.floor((Math.random() * 35) + 30);
+        }
+    }
+
     drawTarget(xt, yt);
 };
 
@@ -82,13 +98,14 @@ update();
 
 document.addEventListener('keydown', (e) => {
     let key = e.key;
+    let ascii = key.charCodeAt();
 
     if(key == 'ArrowRight'){
         if(xc >= 380){
             xc = 380;
         }
 
-        xc += 1.5;
+        xc += 3;
         drawCannon(xc, yc);
     }
 
@@ -98,7 +115,17 @@ document.addEventListener('keydown', (e) => {
             xc = 20;
         }
 
-        xc -= 1.5;
+        xc -= 3;
         drawCannon(xc, yc);
+    }
+
+    if(ascii === 32){
+        console.log('spacebar');
+        // yb -= 3;
+        // drawBullet(xb, yb); 
+        condition = true;
+        yb = yc - 50
+        xb = xc - 2.5;
+        console.log(xb);   
     }
 });
