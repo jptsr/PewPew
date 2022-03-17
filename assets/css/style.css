@@ -5,6 +5,10 @@ body {
   font-size: 15px;
 }
 
+.hide {
+  display: none;
+}
+
 .flexColumn, main {
   display: -webkit-box;
   display: -ms-flexbox;

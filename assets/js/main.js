@@ -2,10 +2,14 @@ const canvas = document.getElementsByTagName('canvas')[0];
 const ctx = canvas.getContext('2d');
 const p = document.getElementsByTagName('p')[0];
 
+const btn_start = document.getElementById('start');
+const btn_restart = document.getElementById('restart');
+console.log(btn_restart);
 
 let xc = 200, yc = 400, xb = xc - 2.5, yb = yc - 50, xt = 100, yt = 50;
 let counter = 0;
 let condition = false;
+let keyCondition = false;
 
 
 canvas.width = 400;
@@ -37,11 +41,6 @@ let drawTarget = (x, y) => {
 };
 
 
-let displayTarget = () => {
-    randomTarget();
-};
-
-
 let game = () => {
     ctx.fillStyle = "black";
 
@@ -52,7 +51,7 @@ let game = () => {
     if(condition){
         yb -= 4;
         drawBullet(xb, yb);
-    }    
+    }
 
     if(yb < -18){
         condition = false;
@@ -71,9 +70,6 @@ let game = () => {
             if(counter >= 10){
                 console.log('you win');
                 p.textContent = `You win`;
-                // window.cancelAnimationFrame(update);
-                // window.cancelAnimationFrame(game);
-                // ctx.clearRect(0, 0, 400, 400);
             }
 
             ctx.clearRect(0, 0, 400, 50);
@@ -93,10 +89,11 @@ let update = () => {
     window.requestAnimationFrame(update);
 };
 
+
 update();
 
 
-document.addEventListener('keydown', (e) => {
+let onKeyDown = (e) => {
     let key = e.key;
     let ascii = key.charCodeAt();
 
@@ -120,12 +117,25 @@ document.addEventListener('keydown', (e) => {
     }
 
     if(ascii === 32){
-        console.log('spacebar');
-        // yb -= 3;
-        // drawBullet(xb, yb); 
+        console.log('spacebar'); 
         condition = true;
         yb = yc - 50
         xb = xc - 2.5;
-        console.log(xb);   
+        console.log(xb);
     }
+};
+
+
+document.removeEventListener('keydown', onKeyDown, true);
+
+
+btn_start.addEventListener('click', () => {
+    console.log('btn start ok');
+
+    document.addEventListener('keydown', onKeyDown, true);
+
+    btn_restart.removeAttribute('class', 'hide');
+    btn_start.setAttribute('class', 'hide');    
 });
+
+btn_restart.addEventListener('click', () => {document.location.reload()});
